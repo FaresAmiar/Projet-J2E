@@ -62,7 +62,20 @@ public class MediathequeData implements PersistentMediatheque {
 	// si pas trouvï¿½, renvoie null
 	@Override
 	public Utilisateur getUser(String login, String password) {
-		return null;
+		String requete = "Select * from Utilisateur Where loginUtilisateur = ? AND passwordUtilisateur = ? ";
+		PreparedStatement pstd = co.prepareStatement(requete);
+		pstd.setString(0, login);
+		pstd.setString(1, password);
+		ResultSet rs = (ResultSet) pstd.executeQuery();
+		Utilisateur user = null;
+		while(rs.next()) {
+			if(rs.getInt("typeUtilisateur")==0) {
+				user = new Abonné(rs.getInt("numUtilisateur"),rs.getString("nomUtilisateur"),rs.getInt("typeUtilisateur"));
+			}else {
+				user = new Bibliothécaire(rs.getInt("numUtilisateur"),rs.getString("nomUtilisateur"),rs.getInt("typeUtilisateur"));
+			}
+		}
+		return user;
 	}
 
 	// va rï¿½cupï¿½rer le document de numï¿½ro numDocument dans la BD
@@ -70,7 +83,27 @@ public class MediathequeData implements PersistentMediatheque {
 	// si pas trouvï¿½, renvoie null
 	@Override
 	public Document getDocument(int numDocument) {
-		return null;
+		String requete = "Select * from Document Where numDoc = ?";
+		PreparedStatement pstd = co.prepareStatement(requete);
+		pstd.setInt(0, numDocument);
+		ResultSet rs = (ResultSet) pstd.executeQuery();
+		Document doc = null;
+		while(rs.next()) {
+			switch (rs.getInt("TypeDoc")) {
+			case 0:
+				doc = new Livre(rs.getInt("NumDoc"),rs.getString("TitreDoc"),rs.getString("AuteurDoc"));
+				break;
+			case 1:
+				doc = new DVD(rs.getInt("NumDoc"),rs.getString("TitreDoc"),rs.getString("AuteurDoc"));
+				break;
+			case 2:
+				doc = new CD(rs.getInt("NumDoc"),rs.getString("TitreDoc"),rs.getString("AuteurDoc"));
+				break;
+			default:
+				break;
+			}
+		}
+		return user;	
 	}
 
 	@Override
