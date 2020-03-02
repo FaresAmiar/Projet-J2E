@@ -6,27 +6,25 @@ public class Abonné implements Utilisateur {
 
     private int numUtilisateur;
 
-    public Abonné(int numUtilisateur, String nomUtilisateur, boolean isBibliothecaire) {
+    public Abonné(int numUtilisateur, String nomUtilisateur){
         this.numUtilisateur = numUtilisateur;
         this.nomUtilisateur = nomUtilisateur;
-        this.isBibliothecaire = isBibliothecaire;
     }
 
     private String nomUtilisateur;
-    private boolean isBibliothecaire;
 
-    @Override
     public String name() {
         return nomUtilisateur;
     }
 
     @Override
     public boolean isBibliothecaire() {
-        return isBibliothecaire;
+        return false;
     }
 
     @Override
     public Object[] data() {
         return new Object[0];
     }
+
 }

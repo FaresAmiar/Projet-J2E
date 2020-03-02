@@ -2,30 +2,28 @@ package persistance;
 
 import mediatek2020.items.Utilisateur;
 
-public class Bibliothécaire implements Utilisateur {
+public class Bibliothécaire implements Utilisateur{
 
-    public Bibliothécaire(int numUtilisateur, String nomUtilisateur, boolean isBibliothecaire) {
+    public Bibliothécaire(int numUtilisateur, String nomUtilisateur) {
         this.numUtilisateur = numUtilisateur;
         this.nomUtilisateur = nomUtilisateur;
-        this.isBibliothecaire = isBibliothecaire;
     }
 
     private int numUtilisateur;
     private String nomUtilisateur;
-    private boolean isBibliothecaire;
 
-    @Override
     public String name() {
         return nomUtilisateur;
     }
 
     @Override
     public boolean isBibliothecaire() {
-        return isBibliothecaire;
+        return true;
     }
 
     @Override
     public Object[] data() {
         return new Object[0];
     }
+
 }
