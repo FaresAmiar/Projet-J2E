@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="E:/Cours/J2EE/mediathek.jar"/>
+	<classpathentry kind="lib" path="F:/Cours/2A/Web Java/Semaine 1/td jdbc/ojdbc6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
