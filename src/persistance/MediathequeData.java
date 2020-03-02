@@ -70,9 +70,9 @@ public class MediathequeData implements PersistentMediatheque {
 		Utilisateur user = null;
 		while(rs.next()) {
 			if(rs.getInt("typeUtilisateur")==0) {
-				user = new Abonné(rs.getInt("numUtilisateur"),rs.getString("nomUtilisateur"),rs.getInt("typeUtilisateur"));
+				user = new Abonné(rs.getInt("numUtilisateur"),rs.getString("nomUtilisateur"),true);
 			}else {
-				user = new Bibliothécaire(rs.getInt("numUtilisateur"),rs.getString("nomUtilisateur"),rs.getInt("typeUtilisateur"));
+				user = new Bibliothécaire(rs.getInt("numUtilisateur"),rs.getString("nomUtilisateur"),false);
 			}
 		}
 		return user;
