@@ -2,9 +2,9 @@ package persistance;
 
 import mediatek2020.items.Utilisateur;
 
-public class BibliothÃ©caire implements Utilisateur{
+public class Bibliothécaire implements Utilisateur{
 
-    public BibliothÃ©caire(int numUtilisateur, String nomUtilisateur) {
+    public Bibliothécaire(int numUtilisateur, String nomUtilisateur) {
         this.numUtilisateur = numUtilisateur;
         this.nomUtilisateur = nomUtilisateur;
     }

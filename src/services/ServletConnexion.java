@@ -6,6 +6,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import mediatek2020.Mediatheque;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -19,7 +22,7 @@ public class ServletConnexion extends HttpServlet {
         out.println("<html>");
         out.println("<head>");
 
-        String title = "Connexion Ã  la BibliothÃ¨k";
+        String title = "Connexion Ã  la Bibliothèk";
 
         out.println("<title>" + title + "</title>");
         out.println("</head>");
@@ -42,14 +45,16 @@ public class ServletConnexion extends HttpServlet {
         if(login == "" || password == "")
             throw new Exception("Parametre manquant");
 
-        MediathequeData md = new MediathequeData();
+        Mediatheque md = Mediatheque.getInstance();
+        if(rien)
+        	
         rep.setContentType("text/html");
         PrintWriter out = rep.getWriter();
 
         out.println("<html>");
         out.println("<head>");
 
-        String title = "Connexion Ã  la BibliothÃ¨k";
+        String title = "Connexion à  la Bibliothèk";
 
         out.println("<title>" + title + "</title>");
         out.println("</head>");

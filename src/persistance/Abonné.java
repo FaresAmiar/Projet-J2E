@@ -2,11 +2,11 @@ package persistance;
 
 import mediatek2020.items.Utilisateur;
 
-public class AbonnÃ© implements Utilisateur {
+public class Abonné implements Utilisateur {
 
     private int numUtilisateur;
 
-    public AbonnÃ©(int numUtilisateur, String nomUtilisateur){
+    public Abonné(int numUtilisateur, String nomUtilisateur){
         this.numUtilisateur = numUtilisateur;
         this.nomUtilisateur = nomUtilisateur;
     }
