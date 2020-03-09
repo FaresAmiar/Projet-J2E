@@ -31,7 +31,7 @@ public class ServletConnexion extends HttpServlet {
         out.println("<body bgcolor=\"white\">");
 
         out.println("<h1>" + title + "</h1>");
-        out.println("<form method = 'POST' action = './connexion'");
+        out.println("<form method = 'POST' action = './connexion'>");
         out.println("<input type = 'text' name = 'login' >Nom d'utilisateur</input>");
         out.println("<input type = 'text' name = 'password' >Mot de Passe</input>");
         out.println("</form>");
@@ -66,7 +66,7 @@ public class ServletConnexion extends HttpServlet {
         out.println("<body bgcolor=\"white\">");
 
         out.println("<h1 style = 'color : red;'>" + title + "</h1>");
-        out.println("<form method = 'POST' action = './connexion'");
+        out.println("<form method = 'POST' action = './connexion'>");
         out.println("<input type = 'text' name = 'login' >Login</input>");
         out.println("<input type = 'text' name = 'password' >Mot de Passe</input>");
         out.println("</form>");
@@ -90,7 +90,9 @@ public class ServletConnexion extends HttpServlet {
         out.println("<title>" + title + "</title>");
         out.println("</head>");
         out.println("<body bgcolor=\"white\">");
-        
+        out.println("<h1>" + title + "</h1>");
+        out.println("</body>");
+        out.println("</html>");
        
     }
 }
