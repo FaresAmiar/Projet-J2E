@@ -24,7 +24,7 @@ public class ServletConnexion extends HttpServlet {
         out.println("<html>");
         out.println("<head>");
 
-        String title = "Connexion Ã  la Bibliothèk";
+        String title = "Connexion à  la Bibliothèk";
 
         out.println("<title>" + title + "</title>");
         out.println("</head>");
@@ -33,7 +33,8 @@ public class ServletConnexion extends HttpServlet {
         out.println("<h1>" + title + "</h1>");
         out.println("<form method = 'POST' action = './connexion'>");
         out.println("<input type = 'text' name = 'login' >Nom d'utilisateur</input>");
-        out.println("<input type = 'text' name = 'password' >Mot de Passe</input>");
+        out.println("<input type = 'password' name = 'password'  >Mot de Passe</input>");
+        out.println("<button type = 'submit' >Confirmer</button>");
         out.println("</form>");
         out.println("</body>");
         out.println("</html>");
@@ -68,7 +69,9 @@ public class ServletConnexion extends HttpServlet {
         out.println("<h1 style = 'color : red;'>" + title + "</h1>");
         out.println("<form method = 'POST' action = './connexion'>");
         out.println("<input type = 'text' name = 'login' >Login</input>");
-        out.println("<input type = 'text' name = 'password' >Mot de Passe</input>");
+        out.println("<input type = 'password' name = 'password' >Mot de Passe</input>");
+
+        out.println("<button type = 'submit' >Confirmer</button>");
         out.println("</form>");
         out.println("</body>");
         out.println("</html>");
