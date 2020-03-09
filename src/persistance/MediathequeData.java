@@ -13,13 +13,13 @@ import mediatek2020.items.*;
 public class MediathequeData implements PersistentMediatheque {
 // Jean-François Brette 01/01/2018
 
-	private Connection co;
+	private static Connection co;
 
 	static {
 		Mediatheque.getInstance().setData(new MediathequeData());
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
-			Connection co = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","etudiant","ETUDIANT");
+			co = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","etudiant","ETUDIANT");
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
