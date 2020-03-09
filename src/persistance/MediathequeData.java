@@ -66,15 +66,15 @@ public class MediathequeData implements PersistentMediatheque {
 		PreparedStatement pstd;
 		try {
 			pstd = co.prepareStatement(requete);
-			pstd.setString(0, login);
-			pstd.setString(1, password);
+			pstd.setString(1, login);
+			pstd.setString(2, password);
 			ResultSet rs = (ResultSet) pstd.executeQuery();
 			Utilisateur user = null;
 			while(rs.next()) {
 				if(rs.getInt("typeUtilisateur")==0) {
-					user = new Abonné(rs.getInt("numUtilisateur"),rs.getString("nomUtilisateur"));
+					user = new Abonné(rs.getInt("numUtilisateur"),rs.getString("loginUtilisateur"));
 				}else {
-					user = new Bibliothécaire(rs.getInt("numUtilisateur"),rs.getString("nomUtilisateur"));
+					user = new Bibliothécaire(rs.getInt("numUtilisateur"),rs.getString("loginUtilisateur"));
 				}
 			}
 			return user;
