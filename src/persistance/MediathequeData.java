@@ -62,7 +62,6 @@ public class MediathequeData implements PersistentMediatheque {
 	// si pas trouvï¿½, renvoie null
 	@Override
 	public Utilisateur getUser(String login, String password) {
-		return null;
 		String requete = "Select * from Utilisateur Where loginUtilisateur = ? AND passwordUtilisateur = ? ";
 		PreparedStatement pstd = co.prepareStatement(requete);
 		pstd.setString(0, login);
@@ -71,9 +70,9 @@ public class MediathequeData implements PersistentMediatheque {
 		Utilisateur user = null;
 		while(rs.next()) {
 			if(rs.getInt("typeUtilisateur")==0) {
-				user = new Abonnï¿½(rs.getInt("numUtilisateur"),rs.getString("nomUtilisateur"));
+				user = new Abonné(rs.getInt("numUtilisateur"),rs.getString("nomUtilisateur"));
 			}else {
-				user = new Bibliothï¿½caire(rs.getInt("numUtilisateur"),rs.getString("nomUtilisateur"));
+				user = new Bibliothécaire(rs.getInt("numUtilisateur"),rs.getString("nomUtilisateur"));
 			}
 		}
 		return user;
@@ -84,7 +83,6 @@ public class MediathequeData implements PersistentMediatheque {
 	// si pas trouvï¿½, renvoie null
 	@Override
 	public Document getDocument(int numDocument) {
-		return null;
 		String requete = "Select * from Document Where numDoc = ?";
 		PreparedStatement pstd = co.prepareStatement(requete);
 		pstd.setInt(0, numDocument);
@@ -110,6 +108,9 @@ public class MediathequeData implements PersistentMediatheque {
 
 	@Override
 	public void nouveauDocument(int type, Object... args) {
+		// args[0] -> le titre
+		// args [1] --> l'auteur
+		// etc...
 	}
 
 }
