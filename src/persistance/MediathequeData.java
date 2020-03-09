@@ -7,11 +7,11 @@ import java.util.List;
 import mediatek2020.*;
 import mediatek2020.items.*;
 
-// classe mono-instance  dont l'unique instance est injectï¿½e dans Mediatheque
-// via une auto-dï¿½claration dans son bloc static
+// classe mono-instance  dont l'unique instance est injectée dans Mediatheque
+// via une auto-déclaration dans son bloc static
 
 public class MediathequeData implements PersistentMediatheque {
-// Jean-Franï¿½ois Brette 01/01/2018
+// Jean-François Brette 01/01/2018
 
 	private Connection co;
 
@@ -28,7 +28,7 @@ public class MediathequeData implements PersistentMediatheque {
 	private MediathequeData() {
 	}
 
-	// renvoie la liste de tous les documents de la bibliothï¿½que
+	// renvoie la liste de tous les documents de la bibliothèque
 	@Override
 	public List<Document> tousLesDocuments() {
 		List<Document> documents = new ArrayList<>();
@@ -62,29 +62,35 @@ public class MediathequeData implements PersistentMediatheque {
 	// si pas trouvï¿½, renvoie null
 	@Override
 	public Utilisateur getUser(String login, String password) {
-		return null;
 		String requete = "Select * from Utilisateur Where loginUtilisateur = ? AND passwordUtilisateur = ? ";
-		PreparedStatement pstd = co.prepareStatement(requete);
-		pstd.setString(0, login);
-		pstd.setString(1, password);
-		ResultSet rs = (ResultSet) pstd.executeQuery();
-		Utilisateur user = null;
-		while(rs.next()) {
-			if(rs.getInt("typeUtilisateur")==0) {
-				user = new Abonnï¿½(rs.getInt("numUtilisateur"),rs.getString("nomUtilisateur"));
-			}else {
-				user = new Bibliothï¿½caire(rs.getInt("numUtilisateur"),rs.getString("nomUtilisateur"));
+		PreparedStatement pstd;
+		try {
+			pstd = co.prepareStatement(requete);
+			pstd.setString(0, login);
+			pstd.setString(1, password);
+			ResultSet rs = (ResultSet) pstd.executeQuery();
+			Utilisateur user = null;
+			while(rs.next()) {
+				if(rs.getInt("typeUtilisateur")==0) {
+					user = new Abonné(rs.getInt("numUtilisateur"),rs.getString("nomUtilisateur"));
+				}else {
+					user = new Bibliothécaire(rs.getInt("numUtilisateur"),rs.getString("nomUtilisateur"));
+				}
 			}
+			return user;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		return user;
+		return null;
 	}
 
-	// va rï¿½cupï¿½rer le document de numï¿½ro numDocument dans la BD
+	// va récupérer le document de numéro numDocument dans la BD
 	// et le renvoie
-	// si pas trouvï¿½, renvoie null
+	// si pas trouvé, renvoie null
 	@Override
 	public Document getDocument(int numDocument) {
-		return null;
+		try {
 		String requete = "Select * from Document Where numDoc = ?";
 		PreparedStatement pstd = co.prepareStatement(requete);
 		pstd.setInt(0, numDocument);
@@ -105,12 +111,29 @@ public class MediathequeData implements PersistentMediatheque {
 				break;
 			}
 		}
-		return user;	
+		return doc;	
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override
 	public void nouveauDocument(int type, Object... args) {
-		
+		// args[0] -> le titre
+				// args [1] --> l'auteur
+				// etc...
+				Document doc = null;
+				int numDoc = (int) args[0];
+				String titreDoc = (String) args[1], auteurDoc = (String) args[2];
+				String requete = "Insert into Document(TitreDoc,AuteurDoc,TypeDoc) values (seq_Document.nextVal,?,?,?)";
+				try {
+					PreparedStatement ptstmt = co.prepareStatement(requete);
+					ptstmt.setString(2,titreDoc); ptstmt.setString(3,auteurDoc); ptstmt.setInt(4,type);
+					ptstmt.executeUpdate();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 	}
 
 }
