@@ -46,38 +46,37 @@ public class ServletConnexion extends HttpServlet {
         String password = req.getParameter("password");
 
         //if(login == "" || password == "")
-            
+        
+        PrintWriter out = rep.getWriter();
 
         Mediatheque md = Mediatheque.getInstance();
-        Utilisateur user = md.getUser(login, password);
-       
-        PrintWriter out = rep.getWriter();
         
-     	if(user == null) {
         rep.setContentType("text/html");
+        Utilisateur user = null;
+        try {
+        	user = md.getUser(login, password);
+        }catch(NullPointerException n) {
+        	out.println("<html>");
+            out.println("<head>");
+
+            String title = "Connexion à  la Bibliothèk échouée";
+            
+            out.println("<title>" + title + login +" " + password+  "</title>");
+            out.println("</head>");
+            out.println("<body bgcolor=\"white\">");
+
+            out.println("<h1 style = 'color : red;'>" + title + "</h1>");
+            out.println("<form method = 'POST' action = './connexion'>");
+            out.println("<input type = 'text' name = 'login' >Login</input>");
+            out.println("<input type = 'password' name = 'password' >Mot de Passe</input>");
+
+            out.println("<button type = 'submit' >Confirmer</button>");
+            out.println("</form>");
+            out.println("</body>");
+            out.println("</html>");
+        }
         
 
-        out.println("<html>");
-        out.println("<head>");
-
-        String title = "Connexion à  la Bibliothèk échoué";
-
-        out.println("<title>" + title + "</title>");
-        out.println("</head>");
-        out.println("<body bgcolor=\"white\">");
-
-        out.println("<h1 style = 'color : red;'>" + title + "</h1>");
-        out.println("<form method = 'POST' action = './connexion'>");
-        out.println("<input type = 'text' name = 'login' >Login</input>");
-        out.println("<input type = 'password' name = 'password' >Mot de Passe</input>");
-
-        out.println("<button type = 'submit' >Confirmer</button>");
-        out.println("</form>");
-        out.println("</body>");
-        out.println("</html>");
-        
-     	}
-     	
      	
         HttpSession session = req.getSession(true);
         session.setAttribute("user", user);

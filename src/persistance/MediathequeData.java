@@ -17,15 +17,19 @@ public class MediathequeData implements PersistentMediatheque {
 
 	static {
 		Mediatheque.getInstance().setData(new MediathequeData());
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			co = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","etudiant","ETUDIANT");
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-		}
 	}
 
 	private MediathequeData() {
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			co = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","etudiant","ETUDIANT");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	// renvoie la liste de tous les documents de la bibliothèque
@@ -33,7 +37,7 @@ public class MediathequeData implements PersistentMediatheque {
 	public List<Document> tousLesDocuments() {
 		List<Document> documents = new ArrayList<>();
 		try {
-
+			
 			String requete = "Select * from Document";
 			Statement st = co.createStatement();
 			ResultSet rs = (ResultSet) st.executeQuery(requete);
@@ -91,28 +95,29 @@ public class MediathequeData implements PersistentMediatheque {
 	@Override
 	public Document getDocument(int numDocument) {
 		try {
-		String requete = "Select * from Document Where numDoc = ?";
-		PreparedStatement pstd = co.prepareStatement(requete);
-		pstd.setInt(0, numDocument);
-		ResultSet rs = (ResultSet) pstd.executeQuery();
-		Document doc = null;
-		while(rs.next()) {
-			switch (rs.getInt("TypeDoc")) {
-			case 0:
-				doc = new Livre(rs.getInt("NumDoc"),rs.getString("TitreDoc"),rs.getString("AuteurDoc"));
-				break;
-			case 1:
-				doc = new DVD(rs.getInt("NumDoc"),rs.getString("TitreDoc"),rs.getString("AuteurDoc"));
-				break;
-			case 2:
-				doc = new CD(rs.getInt("NumDoc"),rs.getString("TitreDoc"),rs.getString("AuteurDoc"));
-				break;
-			default:
-				break;
+			String requete = "Select * from Document Where numDoc = ?";
+			PreparedStatement pstd = co.prepareStatement(requete);
+			pstd.setInt(1, numDocument);
+			ResultSet rs = (ResultSet) pstd.executeQuery();
+			Document doc = null;
+			while(rs.next()) {
+				switch (rs.getInt("TypeDoc")) {
+				case 0:
+					doc = new Livre(rs.getInt("NumDoc"),rs.getString("TitreDoc"),rs.getString("AuteurDoc"));
+					break;
+				case 1:
+					doc = new DVD(rs.getInt("NumDoc"),rs.getString("TitreDoc"),rs.getString("AuteurDoc"));
+					break;
+				case 2:
+					doc = new CD(rs.getInt("NumDoc"),rs.getString("TitreDoc"),rs.getString("AuteurDoc"));
+					break;
+				default:
+					break;
+				}
 			}
-		}
-		return doc;	
-		}catch(Exception e) {
+
+			return doc;	
+				}catch(Exception e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -129,8 +134,9 @@ public class MediathequeData implements PersistentMediatheque {
 				String requete = "Insert into Document(TitreDoc,AuteurDoc,TypeDoc) values (seq_Document.nextVal,?,?,?)";
 				try {
 					PreparedStatement ptstmt = co.prepareStatement(requete);
-					ptstmt.setString(2,titreDoc); ptstmt.setString(3,auteurDoc); ptstmt.setInt(4,type);
+					ptstmt.setString(1,titreDoc); ptstmt.setString(2,auteurDoc); ptstmt.setInt(3,type);
 					ptstmt.executeUpdate();
+
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
