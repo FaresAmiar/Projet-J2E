@@ -7,11 +7,8 @@ import java.util.List;
 import mediatek2020.*;
 import mediatek2020.items.*;
 
-// classe mono-instance  dont l'unique instance est injectée dans Mediatheque
-// via une auto-déclaration dans son bloc static
 
 public class MediathequeData implements PersistentMediatheque {
-// Jean-François Brette 01/01/2018
 
 	private static Connection co;
 
@@ -22,7 +19,7 @@ public class MediathequeData implements PersistentMediatheque {
 	private MediathequeData() {
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
-			co = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","etudiant","ETUDIANT");
+			co = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","SYSTEM","root");
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -36,34 +33,38 @@ public class MediathequeData implements PersistentMediatheque {
 	@Override
 	public List<Document> tousLesDocuments() {
 		List<Document> documents = new ArrayList<>();
+		Integer numUtilisateur = null;
 		try {
 			
 			String requete = "Select * from Document";
 			Statement st = co.createStatement();
 			ResultSet rs = (ResultSet) st.executeQuery(requete);
 			while(rs.next()) {
+				numUtilisateur = rs.getInt("numUtilisateur");
 				int numDoc = rs.getInt("NumDoc"), typeDoc = rs.getInt("TypeDoc");
-				String titreDoc = rs.getString("TitreDoc"), auteurDoc = rs.getString("AuteurDoc");
+				String titreDoc = rs.getString("TitreDoc"), auteurDoc = rs.getString("AuteurDoc"), statutDoc = rs.getString("statutDoc");
 				Document doc = null;
 				switch(typeDoc) {
-					case 0 : doc = new Livre(numDoc,titreDoc,auteurDoc);
+					case 0 : doc = numUtilisateur == null ? new Livre(numDoc,titreDoc,auteurDoc) :
+						new Livre(numDoc, numUtilisateur,titreDoc,auteurDoc,statutDoc);
 						break;
-					case 1 : doc = new DVD(numDoc,titreDoc,auteurDoc);
+					case 1 : doc = numUtilisateur == null ? new DVD(numDoc,titreDoc,auteurDoc) :
+						new DVD(numDoc, numUtilisateur,titreDoc,auteurDoc,statutDoc);
 						break;
-					case 2 : doc = new CD(numDoc,titreDoc,auteurDoc);
+					case 2 : doc = numUtilisateur == null ? new CD(numDoc,titreDoc,auteurDoc) :
+						new CD(numDoc, numUtilisateur,titreDoc,auteurDoc,statutDoc);
 						break;
 				}
 				documents.add(doc);
 			}
-			co.close();
 		}catch(SQLException s) {
 			s.printStackTrace();
 		}
 		return documents;
 	}
 
-	// va rï¿½cupï¿½rer le User dans la BD et le renvoie
-	// si pas trouvï¿½, renvoie null
+	// va récupérer le User dans la BD et le renvoie
+	// si pas trouvé, renvoie null
 	@Override
 	public Utilisateur getUser(String login, String password) {
 		String requete = "Select * from Utilisateur Where loginUtilisateur = ? AND passwordUtilisateur = ? ";
@@ -94,6 +95,7 @@ public class MediathequeData implements PersistentMediatheque {
 	// si pas trouvé, renvoie null
 	@Override
 	public Document getDocument(int numDocument) {
+		Integer numUtilisateur = null;
 		try {
 			String requete = "Select * from Document Where numDoc = ?";
 			PreparedStatement pstd = co.prepareStatement(requete);
@@ -101,15 +103,22 @@ public class MediathequeData implements PersistentMediatheque {
 			ResultSet rs = (ResultSet) pstd.executeQuery();
 			Document doc = null;
 			while(rs.next()) {
-				switch (rs.getInt("TypeDoc")) {
+				numUtilisateur = rs.getInt("numUtilisateur");
+				int numDoc = rs.getInt("numDoc"), typeDoc = rs.getInt("typeDoc");
+				String titreDoc = rs.getString("titreDoc"),
+						auteurDoc = rs.getString("auteurDoc"), statutDoc = rs.getString("statutDoc");
+				switch (typeDoc) {
 				case 0:
-					doc = new Livre(rs.getInt("NumDoc"),rs.getString("TitreDoc"),rs.getString("AuteurDoc"));
+					doc = numUtilisateur == null ? new Livre(numDoc,titreDoc,auteurDoc) :
+						new Livre(numDoc,numUtilisateur,titreDoc,auteurDoc,statutDoc);
 					break;
 				case 1:
-					doc = new DVD(rs.getInt("NumDoc"),rs.getString("TitreDoc"),rs.getString("AuteurDoc"));
+					doc = numUtilisateur == null ? new DVD(numDoc,titreDoc,auteurDoc) :
+						new DVD(numDoc,numUtilisateur,titreDoc,auteurDoc,statutDoc);
 					break;
 				case 2:
-					doc = new CD(rs.getInt("NumDoc"),rs.getString("TitreDoc"),rs.getString("AuteurDoc"));
+					doc = numUtilisateur == null ? new CD(numDoc,titreDoc,auteurDoc) :
+						new CD(numDoc,numUtilisateur,titreDoc,auteurDoc,statutDoc);
 					break;
 				default:
 					break;
@@ -125,16 +134,12 @@ public class MediathequeData implements PersistentMediatheque {
 
 	@Override
 	public void nouveauDocument(int type, Object... args) {
-		// args[0] -> le titre
-				// args [1] --> l'auteur
-				// etc...
-				Document doc = null;
-				int numDoc = (int) args[0];
 				String titreDoc = (String) args[1], auteurDoc = (String) args[2];
-				String requete = "Insert into Document(TitreDoc,AuteurDoc,TypeDoc) values (seq_Document.nextVal,?,?,?)";
+				String requete = "Insert into Document(numDoc,TitreDoc,AuteurDoc,TypeDoc,statutDoc) values (seq_Document.nextVal,?,?,?,'disponible')";
 				try {
 					PreparedStatement ptstmt = co.prepareStatement(requete);
-					ptstmt.setString(1,titreDoc); ptstmt.setString(2,auteurDoc); ptstmt.setInt(3,type);
+					ptstmt.setString(1,titreDoc); 
+					ptstmt.setString(2,auteurDoc); ptstmt.setInt(3,type);
 					ptstmt.executeUpdate();
 
 				} catch (SQLException e) {

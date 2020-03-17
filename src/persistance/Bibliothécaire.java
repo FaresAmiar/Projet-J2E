@@ -23,7 +23,7 @@ public class Bibliothécaire implements Utilisateur{
 
     @Override
     public Object[] data() {
-        return new Object[0];
+        return new Object[] {numUtilisateur,nomUtilisateur};
     }
 
 }

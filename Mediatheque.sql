@@ -3,21 +3,19 @@ SET LINESIZE 150
 SET PAGESIZE 40
 
 REM **************************************************************************
-REM BASE AERO
-REM Auteur : FarÃ¨s AMIAR & Yanis RABIA
+REM BASE Bibliotheque
+REM Auteur : Farès AMIAR & Yanis RABIA
 REM ***************************************************************************
 
 ALTER SESSION SET NLS_DATE_FORMAT = 'dd/mm/yyyy';
 
 PROMPT --> DEBUT DU SCRIPT
 
-REM ** RequÃªte SQL de crÃ©ation des tables **
+REM ** Requête SQL de création des tables **
 
 DROP TABLE Utilisateur CASCADE CONSTRAINTS PURGE
 /
 DROP TABLE Document CASCADE CONSTRAINTS PURGE
-/
-DROP TABLE DocumentsUtilisateurs CASCADE CONSTRAINTS PURGE
 /
 
 PROMPT CREATION DES TABLES
@@ -34,34 +32,23 @@ TypeUtilisateur INTEGER
 CREATE TABLE Document
 (
 NumDoc INTEGER CONSTRAINT pk_Document PRIMARY KEY,
+NumUtilisateur INTEGER,
 TitreDoc VARCHAR2(25) NOT NULL,
 AuteurDoc VARCHAR2(30),
-TypeDoc INTEGER
+TypeDoc INTEGER,
+StatutDoc VARCHAR2(20)
 )
 /
 
-CREATE TABLE DocumentsUtilisateurs 
-(
-NumDoc INTEGER,
-NumUtilisateur INTEGER
-)
-/
 
-ALTER TABLE DocumentsUtilisateurs
-ADD CONSTRAINT pk_DocumentUtilisateur
-	PRIMARY KEY(NumDoc,NumUtilisateur)
-ADD CONSTRAINT fk_NumUtlisateur
-	FOREIGN KEY(NumUtilisateur)
-	REFERENCES Utilisateur(NumUtilisateur)
-	ON DELETE CASCADE
-ADD CONSTRAINT fk_NumDoc
-	FOREIGN KEY(NumDoc)
-	REFERENCES Document(NumDoc)
-	ON DELETE CASCADE
+
+ALTER TABLE Document
+ADD CONSTRAINT fk_Doc_Utilisateur FOREIGN KEY NumUtilisateur 
+REFERENCES Utilisateur(NumUtilsateur)
 /
 
 
-REM ** Ordres SQL de crÃ©ation de SÃ©quences  **
+REM ** Ordres SQL de création de Séquences  **
 
 PROMPT CREATION DES SEQUENCES
 
@@ -77,9 +64,9 @@ CREATE SEQUENCE seq_Document start with 0 Minvalue 0
 /
 
 
-REM ** Les RequÃªtes insertion de donnÃ©es
+REM ** Les Requêtes insertion de données
 
-PROMPT INSERTION AbonnÃ©s
+PROMPT INSERTION Abonnés
 
 Insert into Utilisateur(NumUtilisateur,LoginUtilisateur,PasswordUtilisateur,TypeUtilisateur)
 values(seq_Utilisateur.nextVal,'yanisdz','213',0);
@@ -95,10 +82,10 @@ values(seq_Utilisateur.nextVal,'brette','professeur',1);
 PROMPT insertion documents
 
 Insert into Document(NumDoc,TitreDoc,AuteurDoc,TypeDoc) 
-values(seq_Document.nextVal,'DBZ','Toriyama',0);
+values(seq_Document.nextVal,'DBZ','Toriyama',0,'disponible');
 
-Insert into Document(NumDoc,TitreDoc,AuteurDoc,TypeDoc) 
-values(seq_Document.nextVal,'Seven','Flincher',0);
+Insert into Document(NumDoc,NumUtilisateur,TitreDoc,AuteurDoc,TypeDoc) 
+values(seq_Document.nextVal,1,'Seven','Flincher',0,'emprunté');
 
 PROMPT --> SCRIPT COMPLETEMENT TERMINE
 

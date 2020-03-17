@@ -1,35 +1,13 @@
 package persistance;
 
-import mediatek2020.items.*;
-
-public class Livre implements Document {
+public class Livre extends AbstractDocument {
 
     public Livre(int numDoc, String titreDoc, String auteurDoc) {
-        this.numDoc = numDoc;
-        this.titreDoc = titreDoc;
-        this.auteurDoc = auteurDoc;
+        super(numDoc,titreDoc,auteurDoc);
     }
 
-    private int numDoc;
-    private String titreDoc,auteurDoc;
-
-    @Override
-    public void reserver(Utilisateur utilisateur) throws ReservationException {
-
+    public Livre(int numDoc, int numUtilisateur, String titreDoc, String auteurDoc, String statutDoc) {
+        super(numDoc,numUtilisateur,titreDoc,auteurDoc, statutDoc);
     }
 
-    @Override
-    public void emprunter(Utilisateur utilisateur) throws EmpruntException {
-
-    }
-
-    @Override
-    public void rendre(Utilisateur utilisateur) throws RetourException {
-
-    }
-
-    @Override
-    public Object[] data() {
-        return new Object[0];
-    }
 }
