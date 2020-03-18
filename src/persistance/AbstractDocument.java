@@ -54,15 +54,11 @@ public class AbstractDocument implements Document {
 	public void emprunter(Utilisateur utilisateur) throws EmpruntException {
 		// TODO Auto-generated method stub
 		synchronized(this) {
-			String requete = "Select statutDoc from Document Where numDoc = ?";
 			try {
-				PreparedStatement ptstmt = co.prepareStatement(requete);
-				ptstmt.setInt(1,numDoc); 
-				ResultSet rs = ptstmt.executeQuery();
-				if(rs.next()) {
-					String statutDoc = rs.getString("statutDoc");
 					if(!statutDoc.equals("disponible"))
 						throw new EmpruntException();
+					
+					String requete = "Select statutDoc from Document Where numDoc = ?";
 					
 					requete = "Update Document Set statutDoc = 'emprunté', numUtilisateur = ? Where numDoc = ?";
 					PreparedStatement ptstmtReserver = co.prepareStatement(requete);
@@ -70,9 +66,8 @@ public class AbstractDocument implements Document {
 					ptstmtReserver.setInt(2, numDoc);
 					ptstmtReserver.executeQuery();
 				}
-				
-			} catch (SQLException e) {
-				e.printStackTrace();
+			catch (SQLException e) {
+					e.printStackTrace();
 			}
 		}
 	}
@@ -81,13 +76,8 @@ public class AbstractDocument implements Document {
 	public void rendre(Utilisateur utilisateur) throws RetourException {
 		// TODO Auto-generated method stub
 		synchronized(this) {
-			String requete = "Select statutDoc from Document Where numDoc = ?";
 			try {
-				PreparedStatement ptstmt = co.prepareStatement(requete);
-				ptstmt.setInt(1,numDoc); 
-				ResultSet rs = ptstmt.executeQuery();
-				if(rs.next()) {
-					String statutDoc = rs.getString("statutDoc");
+					String requete = "Select statutDoc from Document Where numDoc = ?";
 					if(statutDoc.equals("disponible"))
 						throw new RetourException();
 					
@@ -97,9 +87,8 @@ public class AbstractDocument implements Document {
 					ptstmtReserver.setInt(2, numDoc);
 					ptstmtReserver.executeQuery();
 				}
-				
-			} catch (SQLException e) {
-				e.printStackTrace();
+				catch (SQLException e) {
+					e.printStackTrace();
 			}
 		}
 	}
@@ -108,25 +97,19 @@ public class AbstractDocument implements Document {
 	public void reserver(Utilisateur utilisateur) throws ReservationException {
 		// TODO Auto-generated method stub
 		synchronized(this) {
-			String requete = "Select statutDoc from Document Where numDoc = ?";
 			try {
-				PreparedStatement ptstmt = co.prepareStatement(requete);
-				ptstmt.setInt(1,numDoc); 
-				ResultSet rs = ptstmt.executeQuery();
-				if(rs.next()) {
-					String statutDoc = rs.getString("statutDoc");
 					if(!statutDoc.equals("disponible"))
 						throw new ReservationException();
+					
+					String requete = "Select statutDoc from Document Where numDoc = ?";
 					
 					requete = "Update Document Set statutDoc = 'réservé', numUtilisateur = ? Where numDoc = ?";
 					PreparedStatement ptstmtReserver = co.prepareStatement(requete);
 					ptstmtReserver.setInt(1,Integer.parseInt((String) utilisateur.data()[0]));
 					ptstmtReserver.setInt(2, numDoc);
 					ptstmtReserver.executeQuery();
-				}
-				
-			} catch (SQLException e) {
-				e.printStackTrace();
+				}catch (SQLException e) {
+					e.printStackTrace();
 			}
 		}
 		
