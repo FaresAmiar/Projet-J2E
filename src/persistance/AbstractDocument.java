@@ -3,7 +3,6 @@ package persistance;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import mediatek2020.items.Document;
@@ -57,10 +56,8 @@ public class AbstractDocument implements Document {
 			try {
 					if(!statutDoc.equals("disponible"))
 						throw new EmpruntException();
-					
-					String requete = "Select statutDoc from Document Where numDoc = ?";
-					
-					requete = "Update Document Set statutDoc = 'emprunté', numUtilisateur = ? Where numDoc = ?";
+			
+					String requete = "Update Document Set statutDoc = 'emprunté', numUtilisateur = ? Where numDoc = ?";
 					PreparedStatement ptstmtReserver = co.prepareStatement(requete);
 					ptstmtReserver.setInt(1,Integer.parseInt((String) utilisateur.data()[0]));
 					ptstmtReserver.setInt(2, numDoc);
@@ -77,11 +74,10 @@ public class AbstractDocument implements Document {
 		// TODO Auto-generated method stub
 		synchronized(this) {
 			try {
-					String requete = "Select statutDoc from Document Where numDoc = ?";
 					if(statutDoc.equals("disponible"))
 						throw new RetourException();
 					
-					requete = "Update Document Set statutDoc = 'disponible', numUtilisateur = ? Where numDoc = ?";
+					String requete = "Update Document Set statutDoc = 'disponible', numUtilisateur = ? Where numDoc = ?";
 					PreparedStatement ptstmtReserver = co.prepareStatement(requete);
 					ptstmtReserver.setInt(1,Integer.parseInt((String) utilisateur.data()[0]));
 					ptstmtReserver.setInt(2, numDoc);
@@ -101,9 +97,7 @@ public class AbstractDocument implements Document {
 					if(!statutDoc.equals("disponible"))
 						throw new ReservationException();
 					
-					String requete = "Select statutDoc from Document Where numDoc = ?";
-					
-					requete = "Update Document Set statutDoc = 'réservé', numUtilisateur = ? Where numDoc = ?";
+					String requete = "Update Document Set statutDoc = 'réservé', numUtilisateur = ? Where numDoc = ?";
 					PreparedStatement ptstmtReserver = co.prepareStatement(requete);
 					ptstmtReserver.setInt(1,Integer.parseInt((String) utilisateur.data()[0]));
 					ptstmtReserver.setInt(2, numDoc);
