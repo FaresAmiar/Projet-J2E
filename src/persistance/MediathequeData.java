@@ -14,19 +14,17 @@ public class MediathequeData implements PersistentMediatheque {
 
 	static {
 		Mediatheque.getInstance().setData(new MediathequeData());
-	}
-
-	private MediathequeData() {
+		
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
-			co = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","SYSTEM","root");
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
+	}
+
+	private MediathequeData() {
+		
 	}
 
 	// renvoie la liste de tous les documents de la bibliothèque
@@ -35,6 +33,7 @@ public class MediathequeData implements PersistentMediatheque {
 		List<Document> documents = new ArrayList<>();
 		Integer numUtilisateur = null;
 		try {
+			co = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","SYSTEM","root");
 			
 			String requete = "Select * from Document";
 			Statement st = co.createStatement();
@@ -57,6 +56,7 @@ public class MediathequeData implements PersistentMediatheque {
 				}
 				documents.add(doc);
 			}
+			co.close();
 		}catch(SQLException s) {
 			s.printStackTrace();
 		}
@@ -70,6 +70,7 @@ public class MediathequeData implements PersistentMediatheque {
 		String requete = "Select * from Utilisateur Where loginUtilisateur = ? AND passwordUtilisateur = ? ";
 		PreparedStatement pstd;
 		try {
+			co = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","SYSTEM","root");
 			pstd = co.prepareStatement(requete);
 			pstd.setString(1, login);
 			pstd.setString(2, password);
@@ -82,6 +83,7 @@ public class MediathequeData implements PersistentMediatheque {
 					user = new Bibliothécaire(rs.getInt("numUtilisateur"),rs.getString("loginUtilisateur"));
 				}
 			}
+			co.close();
 			return user;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -97,6 +99,7 @@ public class MediathequeData implements PersistentMediatheque {
 	public Document getDocument(int numDocument) {
 		Integer numUtilisateur = null;
 		try {
+			co = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","SYSTEM","root");
 			String requete = "Select * from Document Where numDoc = ?";
 			PreparedStatement pstd = co.prepareStatement(requete);
 			pstd.setInt(1, numDocument);
@@ -124,7 +127,7 @@ public class MediathequeData implements PersistentMediatheque {
 					break;
 				}
 			}
-
+			co.close();
 			return doc;	
 				}catch(Exception e) {
 			e.printStackTrace();
@@ -134,14 +137,15 @@ public class MediathequeData implements PersistentMediatheque {
 
 	@Override
 	public void nouveauDocument(int type, Object... args) {
-				String titreDoc = (String) args[1], auteurDoc = (String) args[2];
-				String requete = "Insert into Document(numDoc,TitreDoc,AuteurDoc,TypeDoc,statutDoc) values (seq_Document.nextVal,?,?,?,'disponible')";
+				String titreDoc = (String) args[0], auteurDoc = (String) args[1];
+				String requete = "Insert into Document(numDoc,TitreDoc,AuteurDoc,TypeDoc) values (seq_Document.nextVal,?,?,?)";
 				try {
+					co = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","SYSTEM","root");
 					PreparedStatement ptstmt = co.prepareStatement(requete);
 					ptstmt.setString(1,titreDoc); 
 					ptstmt.setString(2,auteurDoc); ptstmt.setInt(3,type);
 					ptstmt.executeUpdate();
-
+					co.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}

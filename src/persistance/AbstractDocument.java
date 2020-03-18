@@ -13,7 +13,8 @@ import mediatek2020.items.Utilisateur;
 
 public class AbstractDocument implements Document {
 	
-	private int numDoc,numUtilisateur;
+	private int numDoc;
+	private Integer numUtilisateur;
 	private String titreDoc,auteurDoc, statutDoc;
 	private Connection co;
 	
@@ -26,15 +27,10 @@ public class AbstractDocument implements Document {
 		
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
-			co = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","SYSTEM","root");
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-		
 	}
 	
 	public AbstractDocument(int numDoc, String titreDoc, String auteurDoc) {
@@ -56,12 +52,15 @@ public class AbstractDocument implements Document {
 			try {
 					if(!statutDoc.equals("disponible"))
 						throw new EmpruntException();
+					
+					co = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","SYSTEM","root");
 			
-					String requete = "Update Document Set statutDoc = 'emprunté', numUtilisateur = ? Where numDoc = ?";
+					String requete = "Update Document Set statutDoc = 'emprunte', numUtilisateur = ? Where numDoc = ?";
 					PreparedStatement ptstmtReserver = co.prepareStatement(requete);
-					ptstmtReserver.setInt(1,Integer.parseInt((String) utilisateur.data()[0]));
+					ptstmtReserver.setInt(1,(int) utilisateur.data()[0]);
 					ptstmtReserver.setInt(2, numDoc);
 					ptstmtReserver.executeQuery();
+					co.close();
 				}
 			catch (SQLException e) {
 					e.printStackTrace();
@@ -77,11 +76,13 @@ public class AbstractDocument implements Document {
 					if(statutDoc.equals("disponible"))
 						throw new RetourException();
 					
+					co = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","SYSTEM","root");
 					String requete = "Update Document Set statutDoc = 'disponible', numUtilisateur = ? Where numDoc = ?";
 					PreparedStatement ptstmtReserver = co.prepareStatement(requete);
-					ptstmtReserver.setInt(1,Integer.parseInt((String) utilisateur.data()[0]));
+					ptstmtReserver.setInt(1,(int) utilisateur.data()[0]);
 					ptstmtReserver.setInt(2, numDoc);
 					ptstmtReserver.executeQuery();
+					co.close();
 				}
 				catch (SQLException e) {
 					e.printStackTrace();
@@ -97,11 +98,13 @@ public class AbstractDocument implements Document {
 					if(!statutDoc.equals("disponible"))
 						throw new ReservationException();
 					
-					String requete = "Update Document Set statutDoc = 'réservé', numUtilisateur = ? Where numDoc = ?";
+					co = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","SYSTEM","root");
+					String requete = "Update Document Set statutDoc = 'reserve', numUtilisateur = ? Where numDoc = ?";
 					PreparedStatement ptstmtReserver = co.prepareStatement(requete);
-					ptstmtReserver.setInt(1,Integer.parseInt((String) utilisateur.data()[0]));
+					ptstmtReserver.setInt(1,(int) utilisateur.data()[0]);
 					ptstmtReserver.setInt(2, numDoc);
 					ptstmtReserver.executeQuery();
+					co.close();
 				}catch (SQLException e) {
 					e.printStackTrace();
 			}

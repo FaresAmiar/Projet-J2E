@@ -36,14 +36,14 @@ NumUtilisateur INTEGER,
 TitreDoc VARCHAR2(25) NOT NULL,
 AuteurDoc VARCHAR2(30),
 TypeDoc INTEGER,
-StatutDoc VARCHAR2(20)
+StatutDoc VARCHAR2(20) DEFAULT 'disponible'
 )
 /
 
 
 
 ALTER TABLE Document
-ADD CONSTRAINT fk_Doc_Utilisateur FOREIGN KEY NumUtilisateur 
+ADD CONSTRAINT fk_Doc_Utilisateur FOREIGN KEY (NumUtilisateur) 
 REFERENCES Utilisateur(NumUtilsateur)
 /
 
@@ -82,10 +82,10 @@ values(seq_Utilisateur.nextVal,'brette','professeur',1);
 PROMPT insertion documents
 
 Insert into Document(NumDoc,TitreDoc,AuteurDoc,TypeDoc) 
-values(seq_Document.nextVal,'DBZ','Toriyama',0,'disponible');
+values(seq_Document.nextVal,'DBZ','Toriyama',0);
 
-Insert into Document(NumDoc,NumUtilisateur,TitreDoc,AuteurDoc,TypeDoc) 
-values(seq_Document.nextVal,1,'Seven','Flincher',0,'emprunté');
+Insert into Document(NumDoc,NumUtilisateur,TitreDoc,AuteurDoc,TypeDoc,statutDoc) 
+values(seq_Document.nextVal,1,'Seven','Flincher',0,'emprunte');
 
 PROMPT --> SCRIPT COMPLETEMENT TERMINE
 
