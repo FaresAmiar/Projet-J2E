@@ -11,6 +11,17 @@
 	justify-content : space-around;
 }
 
+#form-doc {
+	display: flex;
+	flex-direction: column;
+	justify-content : space-around;
+}
+
+.row-doc {
+	margin: auto;
+}
+
 .form {
 	margin : auto;
 }
+
