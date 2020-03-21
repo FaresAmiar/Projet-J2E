@@ -6,6 +6,8 @@ import java.util.List;
 
 import mediatek2020.*;
 import mediatek2020.items.*;
+import persistance.session.users.Abonné;
+import persistance.session.users.Bibliothécaire;
 
 
 public class MediathequeData implements PersistentMediatheque {
@@ -76,11 +78,11 @@ public class MediathequeData implements PersistentMediatheque {
 			pstd.setString(2, password);
 			ResultSet rs = (ResultSet) pstd.executeQuery();
 			Utilisateur user = null;
-			while(rs.next()) {
+			if(rs.next()) {
 				if(rs.getInt("typeUtilisateur")==0) {
-					user = new Abonné(rs.getInt("numUtilisateur"),rs.getString("loginUtilisateur"));
+					user = new Abonné(rs.getInt("numUtilisateur"),rs.getString("loginUtilisateur"), rs.getString("adresseIP"));
 				}else {
-					user = new Bibliothécaire(rs.getInt("numUtilisateur"),rs.getString("loginUtilisateur"));
+					user = new Bibliothécaire(rs.getInt("numUtilisateur"),rs.getString("loginUtilisateur"), rs.getString("adresseIP"));
 				}
 			}
 			co.close();
@@ -105,7 +107,7 @@ public class MediathequeData implements PersistentMediatheque {
 			pstd.setInt(1, numDocument);
 			ResultSet rs = (ResultSet) pstd.executeQuery();
 			Document doc = null;
-			while(rs.next()) {
+			if(rs.next()) {
 				numUtilisateur = rs.getInt("numUtilisateur");
 				int numDoc = rs.getInt("numDoc"), typeDoc = rs.getInt("typeDoc");
 				String titreDoc = rs.getString("titreDoc"),
@@ -141,6 +143,7 @@ public class MediathequeData implements PersistentMediatheque {
 				String requete = "Insert into Document(numDoc,TitreDoc,AuteurDoc,TypeDoc) values (seq_Document.nextVal,?,?,?)";
 				try {
 					co = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","SYSTEM","root");
+					
 					PreparedStatement ptstmt = co.prepareStatement(requete);
 					ptstmt.setString(1,titreDoc); 
 					ptstmt.setString(2,auteurDoc); ptstmt.setInt(3,type);

@@ -3,6 +3,7 @@ package persistance;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import mediatek2020.items.Document;
@@ -44,18 +45,34 @@ public class AbstractDocument implements Document {
 	public Object[] data() {
 		return new Object[] {numDoc,numUtilisateur,titreDoc,auteurDoc,statutDoc};
 	}
+	
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName() + " n°" + numDoc + " Titre :" + titreDoc + " Auteur : " + auteurDoc;
+		
+	}
 
 	@Override
 	public void emprunter(Utilisateur utilisateur) throws EmpruntException {
 		// TODO Auto-generated method stub
 		synchronized(this) {
 			try {
-					if(!statutDoc.equals("disponible"))
-						throw new EmpruntException();
-					
 					co = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","SYSTEM","root");
+				
+					String requete = "Select numUtilisateur,statutDoc from Document Where numDoc = ?";
+					PreparedStatement pstd = co.prepareStatement(requete);
+					pstd.setInt(1, this.numDoc);
+					ResultSet rs = (ResultSet) pstd.executeQuery();
+					if(rs.next()) {
+						String statut = rs.getString("statutDoc");
+						int numUser = rs.getInt("numUtilisateur");
+						
+						if(!statut.equals("disponible"))
+							throw new EmpruntException();
+					}
+					
 			
-					String requete = "Update Document Set statutDoc = 'emprunte', numUtilisateur = ? Where numDoc = ?";
+					requete = "Update Document Set statutDoc = 'emprunte', numUtilisateur = ? Where numDoc = ?";
 					PreparedStatement ptstmtReserver = co.prepareStatement(requete);
 					ptstmtReserver.setInt(1,(int) utilisateur.data()[0]);
 					ptstmtReserver.setInt(2, numDoc);
@@ -73,13 +90,22 @@ public class AbstractDocument implements Document {
 		// TODO Auto-generated method stub
 		synchronized(this) {
 			try {
-					if(statutDoc.equals("disponible"))
+				co = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","SYSTEM","root");
+				
+				String requete = "Select statutDoc from Document Where numDoc = ?";
+				PreparedStatement pstd = co.prepareStatement(requete);
+				pstd.setInt(1, this.numDoc);
+				ResultSet rs = (ResultSet) pstd.executeQuery();
+				if(rs.next()) {
+					String statut = rs.getString("statutDoc");
+					if(statut.equals("disponible"))
 						throw new RetourException();
+				}
 					
-					co = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","SYSTEM","root");
-					String requete = "Update Document Set statutDoc = 'disponible', numUtilisateur = ? Where numDoc = ?";
+					
+					requete = "Update Document Set statutDoc = 'disponible', numUtilisateur = ? Where numDoc = ?";
 					PreparedStatement ptstmtReserver = co.prepareStatement(requete);
-					ptstmtReserver.setInt(1,(int) utilisateur.data()[0]);
+					ptstmtReserver.setNull(1, java.sql.Types.INTEGER);
 					ptstmtReserver.setInt(2, numDoc);
 					ptstmtReserver.executeQuery();
 					co.close();
@@ -95,11 +121,19 @@ public class AbstractDocument implements Document {
 		// TODO Auto-generated method stub
 		synchronized(this) {
 			try {
-					if(!statutDoc.equals("disponible"))
-						throw new ReservationException();
-					
 					co = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","SYSTEM","root");
-					String requete = "Update Document Set statutDoc = 'reserve', numUtilisateur = ? Where numDoc = ?";
+
+					String requete = "Select statutDoc from Document Where numDoc = ?";
+					PreparedStatement pstd = co.prepareStatement(requete);
+					pstd.setInt(1, this.numDoc);
+					ResultSet rs = (ResultSet) pstd.executeQuery();
+					if(rs.next()) {
+						String statut = rs.getString("statutDoc");
+						if(!statut.equals("disponible"))
+							throw new ReservationException();
+					}
+					
+					requete = "Update Document Set statutDoc = 'reserve', numUtilisateur = ? Where numDoc = ?";
 					PreparedStatement ptstmtReserver = co.prepareStatement(requete);
 					ptstmtReserver.setInt(1,(int) utilisateur.data()[0]);
 					ptstmtReserver.setInt(2, numDoc);

@@ -1,12 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ page import = "mediatek2020.items.Utilisateur" %>
-<%@ page import = "java.util.ArrayList" %>
+<%@ page import = "java.util.List" %>
 <%@ page import = "mediatek2020.items.Document" %>
-    
-    <% Utilisateur user = (Utilisateur) session.getAttribute("utilisateur");
-       ArrayList<Document> documents = (ArrayList) session.getAttribute("documents");
-       String html = "";
+<%@ page import = "mediatek2020.Mediatheque" %>
+<%@ page import = "persistance.session.MediaSession" %>
+
+    <% MediaSession medSession = (MediaSession) session.getAttribute("session");
+       Utilisateur user = medSession.getUser();
+       List<Document> documents = Mediatheque.getInstance().tousLesDocuments();
+       String info = (String) medSession.getInfo();
     %>
     
 <!DOCTYPE html>
@@ -19,6 +22,11 @@
 
 	<h1>Bienvenue <%= user.name() %> </h1>
 	
+	
+	<h3 style = "color : blue;"><%= info %></h3>
+	<% medSession.setInfo(""); %>
+	
+	
 	<form method = 'POST' action = 'services'>
 	<tr>
 	<% for (Document d : documents) { %>
@@ -27,11 +35,11 @@
 		<td> <%= d.getClass().getSimpleName() %>  </td>
 		<td> <%= d.data()[2] %> </td>
 		<td> <%= d.data()[3] %> </td>
-		<td> <input type="checkbox" name="emprunts" value="<%= d.data()[0] %>"> </td>
+		<td> <button type = 'submit' name = "emprunter" value = "<%= d.data()[0] %>">Emprunter</button> </td>
 		<% } %>
 	<% } %>
 	</tr>
-	<button type = 'submit' name = "emprunter">Emprunter</button>
+	
 	</form>
 	
 	
@@ -39,17 +47,17 @@
 	<form method = 'POST' action = 'services'>
 	<tr>
 	<% for (Document d : documents) { %>
-		<% if (d.data()[1] == user.data()[0]) { %>
+		<% if (d.data()[1] == user.data()[0] && !d.data()[4].equals("disponible")) { %>
 		
 		<td> <%= d.getClass().getSimpleName() %>  </td>
 		<td> <%= d.data()[2] %> </td>
 		<td> <%= d.data()[3] %> </td>
-		<td> <input type="checkbox" name="retours" value="<%= d.data()[0] %>"> </td>
+		<td> <button type = 'submit' name = "retourner" value = "<%= d.data()[0] %>">Retourner</button> </td>
 		
 		<% } %>
 	<% } %>
 	</tr>
-	<button type = 'submit' name = "retourner">Retourner</button>
+	
 	</form>
 	
 	<% if(user.isBibliothecaire()) { %>

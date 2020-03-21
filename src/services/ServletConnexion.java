@@ -1,7 +1,6 @@
 package services;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,6 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import mediatek2020.Mediatheque;
 import mediatek2020.items.Utilisateur;
+import persistance.session.MediaSession;
 
 /**
  * Servlet implementation class ServletConnexion
@@ -32,34 +32,29 @@ public class ServletConnexion extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest req, HttpServletResponse rep) throws ServletException, IOException {
+		boolean connexion = true;
 		String login = req.getParameter("login");
         String password = req.getParameter("password");
 
-        //if(login == "" || password == "")
-        
-        PrintWriter out = rep.getWriter();
 
         Mediatheque md = Mediatheque.getInstance();
         
         Utilisateur user = null;
         
-        try {
-        	user = md.getUser(login, password);
-        }catch(NullPointerException n) {
-        	
-
+        user = md.getUser(login, password);
+       
+        if(user == null)
+        	connexion = false;
+        
+        
+        if(connexion) {
+	        MediaSession mdSession = new MediaSession(user);
+	        HttpSession session = req.getSession(true);
+	        session.setAttribute("session", mdSession);
         }
         
-        HttpSession session = req.getSession(true);
-        session.setAttribute("utilisateur", user);
-        
-        session.setAttribute("documents", md.tousLesDocuments());
-        
-        
-        req.getRequestDispatcher("accueil.jsp").forward(req, rep);
+        rep.sendRedirect(connexion ? "accueil.jsp" : "connexion.jsp");
      	
-        
-
 	}
 
 }

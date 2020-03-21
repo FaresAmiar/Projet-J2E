@@ -25,7 +25,8 @@ CREATE TABLE Utilisateur
 NumUtilisateur INTEGER CONSTRAINT pk_Utilisateur PRIMARY KEY,
 LoginUtilisateur VARCHAR(20),
 PasswordUtilisateur VARCHAR2(20),
-TypeUtilisateur INTEGER
+TypeUtilisateur INTEGER,
+AdresseIP VARCHAR(15) DEFAULT ''
 )
 /
 
@@ -68,16 +69,16 @@ REM ** Les Requêtes insertion de données
 
 PROMPT INSERTION Abonnés
 
-Insert into Utilisateur(NumUtilisateur,LoginUtilisateur,PasswordUtilisateur,TypeUtilisateur)
-values(seq_Utilisateur.nextVal,'yanisdz','213',0);
+Insert into Utilisateur(NumUtilisateur,LoginUtilisateur,PasswordUtilisateur,TypeUtilisateur, adresseIP)
+values(seq_Utilisateur.nextVal,'yanisdz','213',0, '10.1.0.1');
 
-Insert into Utilisateur(NumUtilisateur,LoginUtilisateur,PasswordUtilisateur,TypeUtilisateur)
-values(seq_Utilisateur.nextVal,'resfadz','dz',0);
+Insert into Utilisateur(NumUtilisateur,LoginUtilisateur,PasswordUtilisateur,TypeUtilisateur, adresseIP)
+values(seq_Utilisateur.nextVal,'resfadz','dz',0, '10.1.0.2');
 
 PROMPT insertion du bibliothecaire
 
-Insert into Utilisateur(NumUtilisateur,LoginUtilisateur,PasswordUtilisateur,TypeUtilisateur)
-values(seq_Utilisateur.nextVal,'brette','professeur',1);
+Insert into Utilisateur(NumUtilisateur,LoginUtilisateur,PasswordUtilisateur,TypeUtilisateur, adresseIP)
+values(seq_Utilisateur.nextVal,'brette','professeur',1, '10.1.0.3');
 
 PROMPT insertion documents
 
