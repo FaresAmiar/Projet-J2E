@@ -17,6 +17,7 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>Accueil Médiathèque</title>
+<link rel = 'stylesheet' type = 'text/css' href = './accueil.css'>
 </head>
 <body>
 
@@ -26,7 +27,10 @@
 	<h3 style = "color : blue;"><%= info %></h3>
 	<% medSession.setInfo(""); %>
 	
-	
+	<div id = 'formulaires'>
+
+	<div class = 'form'>
+
 	<form method = 'POST' action = 'services'>
 	<tr>
 	<% for (Document d : documents) { %>
@@ -41,9 +45,11 @@
 	</tr>
 	
 	</form>
+
+	</div>
 	
-	
-	
+	<div class = 'form'>
+
 	<form method = 'POST' action = 'services'>
 	<tr>
 	<% for (Document d : documents) { %>
@@ -59,15 +65,22 @@
 	</tr>
 	
 	</form>
+
+	</div>
 	
 	<% if(user.isBibliothecaire()) { %>
-			<form method = 'POST' action = 'services'> 
+
+	<div class = 'form'>
+			<form method = 'POST' action = 'services'>
 					Type<input type = 'text' name = 'typeDoc' />
 					Titre<input type = 'text' name = 'titreDoc'  />
 					Auteur<input type = 'text' name = 'auteurDoc'  />
 					<button type = 'submit' name = 'ajouter'>Ajouter</button>
 			</form>
+	</div>
 	<% } %>
 
+	</div>
+	
 </body>
 </html>

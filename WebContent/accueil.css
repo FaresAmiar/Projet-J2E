@@ -1,0 +1,16 @@
+@charset "ISO-8859-1";
+
+* {
+	margin : 0;
+	padding : 0;
+}
+
+#formulaires {
+	display : flex;
+	flex-direction : row;
+	justify-content : space-around;
+}
+
+.form {
+	margin : auto;
+}

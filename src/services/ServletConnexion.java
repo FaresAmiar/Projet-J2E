@@ -32,7 +32,8 @@ public class ServletConnexion extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest req, HttpServletResponse rep) throws ServletException, IOException {
-		boolean connexion = true;
+		
+		boolean connexion = true; //Connexion réussie
 		String login = req.getParameter("login");
         String password = req.getParameter("password");
 
@@ -43,17 +44,17 @@ public class ServletConnexion extends HttpServlet {
         
         user = md.getUser(login, password);
        
-        if(user == null)
+        if(user == null) //Utilisateur non trouvé
         	connexion = false;
         
         
         if(connexion) {
-	        MediaSession mdSession = new MediaSession(user);
+	        MediaSession mdSession = new MediaSession(user); //Nouvelle session pour 
 	        HttpSession session = req.getSession(true);
 	        session.setAttribute("session", mdSession);
         }
         
-        rep.sendRedirect(connexion ? "accueil.jsp" : "connexion.jsp");
+        rep.sendRedirect(connexion ? "accueil.jsp" : "connexion.jsp"); //Renvoie vers la page de connexion si l'user n'est pas trouvé
      	
 	}
 
