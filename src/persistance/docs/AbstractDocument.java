@@ -1,4 +1,4 @@
-package persistance;
+package persistance.docs;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -67,7 +67,7 @@ public class AbstractDocument implements Document {
 						String statut = rs.getString("statutDoc");
 						int numUser = rs.getInt("numUtilisateur");
 						
-						if(!statut.equals("disponible"))
+						if(!statut.equals("disponible") || (int) utilisateur.data()[0] != numUser)
 							throw new EmpruntException();
 					}
 					

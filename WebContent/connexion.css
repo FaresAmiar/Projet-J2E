@@ -3,6 +3,10 @@ form {
   border: 3px solid #f1f1f1;
 }
 
+h1 {
+	text-align : center;
+}
+
 /* Full-width inputs */
 input[type=text], input[type=password] {
   width: 100%;
@@ -13,7 +17,7 @@ input[type=text], input[type=password] {
   box-sizing: border-box;
 }
 
-/* Set a style for all buttons */
+
 button {
   background-color: #4CAF50;
   color: white;
@@ -24,12 +28,12 @@ button {
   width: 100%;
 }
 
-/* Add a hover effect for buttons */
+
 button:hover {
   opacity: 0.8;
 }
 
-/* Add padding to containers */
+
 .container {
   padding: 16px;
 }

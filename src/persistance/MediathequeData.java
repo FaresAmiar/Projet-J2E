@@ -6,6 +6,9 @@ import java.util.List;
 
 import mediatek2020.*;
 import mediatek2020.items.*;
+import persistance.docs.CD;
+import persistance.docs.DVD;
+import persistance.docs.Livre;
 import persistance.session.users.Abonné;
 import persistance.session.users.Bibliothécaire;
 

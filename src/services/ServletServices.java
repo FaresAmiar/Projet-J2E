@@ -49,7 +49,7 @@ public class ServletServices extends HttpServlet {
 					doc = md.getDocument(numDoc);
 					md.emprunter(doc,user);
 					medSession.setInfo(user.name() + ", Le " + doc.toString() + " à bien été emprunté");
-				} catch (EmpruntException e) { medSession.setInfo("déja emprunté frero");}
+				} catch (EmpruntException e) { medSession.setInfo("Le " + doc.toString() + " est déja emprunté !");}
 				
 		}
 		
@@ -60,7 +60,7 @@ public class ServletServices extends HttpServlet {
 					doc = md.getDocument(numDoc);
 					md.rendre(doc,user);
 					medSession.setInfo(user.name() + ", Le " + doc.toString() + " à bien été retourné");
-				} catch (RetourException e) { medSession.setInfo(e.toString());}
+				} catch (RetourException e) { medSession.setInfo("Le " + doc.toString() + " est retourné !");}
 				
 		}
 		
@@ -69,7 +69,7 @@ public class ServletServices extends HttpServlet {
 				int numDoc = Integer.parseInt(num);
 				try {
 					md.reserver(md.getDocument(numDoc),user);
-				} catch (EmpruntException e) { medSession.setInfo(e.toString()); }
+				} catch (EmpruntException e) { medSession.setInfo("Le " + doc.toString() + " est déja emprunté !"); }
 		}
 		
 		if(req.getParameter("ajouter") != null) {
