@@ -29,7 +29,7 @@ public class LoadOnInitServlet extends HttpServlet {
     	super.init(arg0);
     	
     	try {
-    		Class.forName("persistance.MediathequeData");
+    		Class.forName("persistance.MediathequeData"); //Charger la classe MediathequeData qui s'auto-déclare à Mediatheque
     	}catch(ClassNotFoundException e) {
     		e.printStackTrace();
     	}

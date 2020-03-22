@@ -49,7 +49,7 @@ public class ServletConnexion extends HttpServlet {
         
         
         if(connexion) {
-	        MediaSession mdSession = new MediaSession(user); //Nouvelle session pour 
+	        MediaSession mdSession = new MediaSession(user); //Nouvelle session pour chaque utilisateur
 	        HttpSession session = req.getSession(true);
 	        session.setAttribute("session", mdSession);
         }

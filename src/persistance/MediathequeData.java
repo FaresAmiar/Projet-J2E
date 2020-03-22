@@ -16,10 +16,11 @@ import persistance.session.users.Bibliothécaire;
 public class MediathequeData implements PersistentMediatheque {
 
 	private static Connection co;
+	private static List<Document> documents;
 
 	static {
 		Mediatheque.getInstance().setData(new MediathequeData());
-		
+		documents = new ArrayList<>();
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 		} catch (ClassNotFoundException e) {
@@ -32,10 +33,10 @@ public class MediathequeData implements PersistentMediatheque {
 		
 	}
 
-	// renvoie la liste de tous les documents de la bibliothèque
+	// renvoie la liste statique de tous les documents de la bibliothèque
 	@Override
 	public List<Document> tousLesDocuments() {
-		List<Document> documents = new ArrayList<>();
+		documents.clear();
 		Integer numUtilisateur = null;
 		try {
 			co = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","SYSTEM","root");
@@ -97,49 +98,17 @@ public class MediathequeData implements PersistentMediatheque {
 		return null;
 	}
 
-	// va récupérer le document de numéro numDocument dans la BD
-	// et le renvoie
-	// si pas trouvé, renvoie null
+	// va récupérer le document de numéro numDocument dans la liste statique
 	@Override
 	public Document getDocument(int numDocument) {
-		Integer numUtilisateur = null;
-		try {
-			co = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","SYSTEM","root");
-			String requete = "Select * from Document Where numDoc = ?";
-			PreparedStatement pstd = co.prepareStatement(requete);
-			pstd.setInt(1, numDocument);
-			ResultSet rs = (ResultSet) pstd.executeQuery();
-			Document doc = null;
-			if(rs.next()) {
-				numUtilisateur = rs.getInt("numUtilisateur");
-				int numDoc = rs.getInt("numDoc"), typeDoc = rs.getInt("typeDoc");
-				String titreDoc = rs.getString("titreDoc"),
-						auteurDoc = rs.getString("auteurDoc"), statutDoc = rs.getString("statutDoc");
-				switch (typeDoc) {
-				case 0:
-					doc = numUtilisateur == null ? new Livre(numDoc,titreDoc,auteurDoc) :
-						new Livre(numDoc,numUtilisateur,titreDoc,auteurDoc,statutDoc);
-					break;
-				case 1:
-					doc = numUtilisateur == null ? new DVD(numDoc,titreDoc,auteurDoc) :
-						new DVD(numDoc,numUtilisateur,titreDoc,auteurDoc,statutDoc);
-					break;
-				case 2:
-					doc = numUtilisateur == null ? new CD(numDoc,titreDoc,auteurDoc) :
-						new CD(numDoc,numUtilisateur,titreDoc,auteurDoc,statutDoc);
-					break;
-				default:
-					break;
-				}
-			}
-			co.close();
-			return doc;	
-				}catch(Exception e) {
-			e.printStackTrace();
-		}
+		tousLesDocuments();
+		for(Document d : documents)
+			if((int) d.data()[0] == numDocument)
+				return d;
 		return null;
 	}
 
+	//Crée un nouveau document avec le type (0 : Livre, 1 : DVD, 2 : CD), le titre et l'auteur
 	@Override
 	public void nouveauDocument(int type, Object... args) {
 				String titreDoc = (String) args[0], auteurDoc = (String) args[1];

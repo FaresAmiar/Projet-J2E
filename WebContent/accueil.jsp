@@ -36,7 +36,7 @@
 	<div id = 'formulaires'>
 
 		<div class = 'form'>
-	
+			<h5>Documents à Emprunter</h5>
 			<form method = 'POST' action = 'services'>
 					<div>
 						<table class = 'table'>
@@ -67,7 +67,7 @@
 		</div>
 		
 		<div class = 'form'>
-	
+			<h5>Documents à Retourner</h5>
 			<form method = 'POST' action = 'services'>
 				<div>
 					<table class = 'table'>
@@ -99,6 +99,7 @@
 		<% if(user.isBibliothecaire()) { %>
 	
 		<div class = 'form'>
+				<h5>Documents à Ajouter</h5>
 				<form method = 'POST' action = 'services'>
 					<tr>
 						<th>Type</th>

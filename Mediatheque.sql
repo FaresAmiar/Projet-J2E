@@ -34,10 +34,10 @@ CREATE TABLE Document
 (
 NumDoc INTEGER CONSTRAINT pk_Document PRIMARY KEY,
 NumUtilisateur INTEGER,
-TitreDoc VARCHAR2(25) NOT NULL,
-AuteurDoc VARCHAR2(30),
+TitreDoc VARCHAR2(50) NOT NULL,
+AuteurDoc VARCHAR2(50),
 TypeDoc INTEGER,
-StatutDoc VARCHAR2(20) DEFAULT 'disponible'
+StatutDoc VARCHAR2(15) DEFAULT 'disponible'
 )
 /
 
@@ -46,6 +46,7 @@ StatutDoc VARCHAR2(20) DEFAULT 'disponible'
 ALTER TABLE Document
 ADD CONSTRAINT fk_Doc_Utilisateur FOREIGN KEY (NumUtilisateur) 
 REFERENCES Utilisateur(NumUtilsateur)
+ADD CONSTRAINT uq_Doc UNIQUE(TitreDoc,AuteurDoc,TypeDoc)
 /
 
 
@@ -70,10 +71,10 @@ REM ** Les Requêtes insertion de données
 PROMPT INSERTION Abonnés
 
 Insert into Utilisateur(NumUtilisateur,LoginUtilisateur,PasswordUtilisateur,TypeUtilisateur, adresseIP)
-values(seq_Utilisateur.nextVal,'yanisdz','213',0, '10.1.0.1');
+values(seq_Utilisateur.nextVal,'yanis','eleve1',0, '10.1.0.1');
 
 Insert into Utilisateur(NumUtilisateur,LoginUtilisateur,PasswordUtilisateur,TypeUtilisateur, adresseIP)
-values(seq_Utilisateur.nextVal,'resfadz','dz',0, '10.1.0.2');
+values(seq_Utilisateur.nextVal,'fares','eleve2',0, '10.1.0.2');
 
 PROMPT insertion du bibliothecaire
 
@@ -86,7 +87,13 @@ Insert into Document(NumDoc,TitreDoc,AuteurDoc,TypeDoc)
 values(seq_Document.nextVal,'DBZ','Toriyama',0);
 
 Insert into Document(NumDoc,NumUtilisateur,TitreDoc,AuteurDoc,TypeDoc,statutDoc) 
-values(seq_Document.nextVal,1,'Seven','Flincher',0,'emprunte');
+values(seq_Document.nextVal,1,'Seven','Fincher',1,'emprunte');
+
+Insert into Document(NumDoc,TitreDoc,AuteurDoc,TypeDoc) 
+values(seq_Document.nextVal,'Rocky IV','Silvester Stallone',1);
+
+Insert into Document(NumDoc,TitreDoc,AuteurDoc,TypeDoc) 
+values(seq_Document.nextVal,'L''école du micro d''argent ','IAM',2);
 
 PROMPT --> SCRIPT COMPLETEMENT TERMINE
 

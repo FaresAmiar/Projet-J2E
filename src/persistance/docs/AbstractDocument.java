@@ -67,7 +67,8 @@ public class AbstractDocument implements Document {
 						String statut = rs.getString("statutDoc");
 						int numUser = rs.getInt("numUtilisateur");
 						
-						if(!statut.equals("disponible") || (int) utilisateur.data()[0] != numUser)
+						//Le document doit être disponible ou réservé par ce même utilisateur
+						if(!statut.equals("disponible") && (int) utilisateur.data()[0] != numUser)
 							throw new EmpruntException();
 					}
 					
@@ -92,13 +93,16 @@ public class AbstractDocument implements Document {
 			try {
 				co = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","SYSTEM","root");
 				
-				String requete = "Select statutDoc from Document Where numDoc = ?";
+				String requete = "Select statutDoc, numUtilisateur from Document Where numDoc = ?";
 				PreparedStatement pstd = co.prepareStatement(requete);
 				pstd.setInt(1, this.numDoc);
 				ResultSet rs = (ResultSet) pstd.executeQuery();
 				if(rs.next()) {
 					String statut = rs.getString("statutDoc");
-					if(statut.equals("disponible"))
+					int numUser = rs.getInt("numUtilisateur");
+					
+					//Le document doit être emprunté ou réservé par ce même utilisateur
+					if(statut.equals("disponible") || (int) utilisateur.data()[0] != numUser) 
 						throw new RetourException();
 				}
 					
@@ -129,6 +133,8 @@ public class AbstractDocument implements Document {
 					ResultSet rs = (ResultSet) pstd.executeQuery();
 					if(rs.next()) {
 						String statut = rs.getString("statutDoc");
+						
+						//Le document doit être disponible
 						if(!statut.equals("disponible"))
 							throw new ReservationException();
 					}
